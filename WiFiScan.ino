@@ -2,12 +2,9 @@
 // See the Device Info tab, or Template settings
 #define BLYNK_TEMPLATE_ID "TMPLcfE2j3be"
 #define BLYNK_DEVICE_NAME "PetFeeder"
-#define BLYNK_AUTH_TOKEN "dJHip8yQaKiVTP5Z6A99SJjs8HyqHQNe"
+#define BLYNK_AUTH_TOKEN "TOKEN"
 
-
-// Comment this out to disable prints and save space
 #define BLYNK_PRINT Serial
-
 
 #include <WiFi.h>
 #include <WiFiClient.h>
@@ -16,8 +13,7 @@
 #include <TimeLib.h>
 #include <WidgetRTC.h>
 
-
-const int stepsPerRevolution = 2048;  // change this to fit the number of steps per revolution
+const int stepsPerRevolution = 2048; // change this to fit the number of steps per revolution
 
 // ULN2003 Motor Driver Pins
 #define IN1 26
@@ -29,8 +25,8 @@ char auth[] = BLYNK_AUTH_TOKEN;
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "NET_2GE4DB2C";
-char pass[] = "65E4DB2C";
+char ssid[] = "wifi";
+char pass[] = "SENHA";
 
 BlynkTimer timer;
 WidgetRTC rtc;
@@ -45,15 +41,14 @@ BLYNK_WRITE(V0)
   isStepperRunning = !isStepperRunning;
   Serial.println(countOpens);
 
-
   // Update state
   Blynk.virtualWrite(V1, countOpens);
 }
 
 BLYNK_WRITE(V1) // the virtual Pin that stores and displays the number of openings
 {
-   countOpens = param.asInt();
-   Serial.print(countOpens);
+  countOpens = param.asInt();
+  Serial.print(countOpens);
 }
 
 // display in the serial and write on the Virtual Pin V3
@@ -77,7 +72,6 @@ BLYNK_CONNECTED()
   rtc.begin();
 }
 
-
 // This function sends Arduino's uptime every second to Virtual Pin 2.
 void myTimerEvent()
 {
@@ -93,7 +87,7 @@ void setup()
   Serial.begin(115200);
 
   Blynk.begin(auth, ssid, pass);
-  Blynk.syncVirtual(V1);  // just read V1 from server to MCU
+  Blynk.syncVirtual(V1); // just read V1 from server to MCU
 
   // Setup a function to be called every second
   timer.setInterval(1000L, myTimerEvent);
@@ -106,18 +100,17 @@ void loop()
   myStepper.step(0);
   setSyncInterval(10 * 60); // Sync interval in seconds (10 minutes)
 
-
-  if (isStepperRunning) {
+  if (isStepperRunning)
+  {
     Serial.println("running");
-    //run motor
+    // run motor
     myStepper.step(stepsPerRevolution);
-    //increase openings
+    // increase openings
     countOpens++;
     delay(1000);
-    //stop running
+    // stop running
     isStepperRunning = false;
-    //display time of last opening
+    // display time of last opening
     clockDisplay();
   }
 }
-
